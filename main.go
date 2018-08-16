@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -59,6 +60,8 @@ func newBody(r *http.Request, i interface{}) error {
 var rules = []Transformation{
 	Transformation{path: "/v1/search", tx: ruleTransformer(search)},
 	Transformation{path: "/v1/jobs", tx: ruleTransformer(jobs)},
+	Transformation{path: "/v1/job", tx: ruleTransformer(job)},
+	Transformation{path: "/v1/system", tx: ruleTransformer(system)},
 }
 
 // Accept a Request. Walk through the rules.
@@ -72,6 +75,7 @@ func modifyRequest(r *http.Request) error {
 		if err := t.tx.Transform(r); err != nil {
 			return err
 		}
+		return nil
 	}
 	return nil
 }
@@ -103,8 +107,10 @@ func main() {
 		req.URL.Host = origin.Host
 
 		if err := modifyRequest(req); err != nil {
+			log.Println("Cannot render", req.URL)
 			panic(err)
 		}
+		log.Println("Hitting: ", req.URL)
 	}
 
 	// Start the Server. Listen to the specified Port.

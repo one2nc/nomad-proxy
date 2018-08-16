@@ -35,7 +35,7 @@ func jobs(r *http.Request) error {
 		val := r.URL.Query()
 		val.Set("prefix", *jobPrefix)
 		r.URL.RawQuery = val.Encode()
-	} else if r.Method == "POST" {
+	} else if r.Method == "POST" || r.Method == "PUT" {
 		b, err := parseJob(r)
 		if err != nil {
 			return err

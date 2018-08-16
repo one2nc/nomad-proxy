@@ -110,7 +110,7 @@ func main() {
 			log.Println("Cannot render", req.URL)
 			panic(err)
 		}
-		log.Println("Hitting: ", req.URL)
+		log.Println("Hitting: ", req.Method, " ", req.URL)
 	}
 
 	// Start the Server. Listen to the specified Port.

@@ -75,5 +75,21 @@ func TestModifyRequest(t *testing.T) {
 				t.Fatal("Content Length should have changed")
 			}
 		})
+
+		t.Run("/v1/job", func(t *testing.T) {
+			req := httptest.NewRequest("GET", "/v1/job/hello", nil)
+
+			if err := modifyRequest(req); err == nil {
+				t.Fatal("Non prefix Get should raise an error")
+			}
+		})
+
+		t.Run("/v1/system", func(t *testing.T) {
+			req := httptest.NewRequest("GET", "/v1/system", nil)
+
+			if err := modifyRequest(req); err == nil {
+				t.Fatal("System calls are not allowed")
+			}
+		})
 	})
 }

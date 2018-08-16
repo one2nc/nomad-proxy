@@ -7,5 +7,5 @@ import (
 
 // /v1/job overrides.
 func system(r *http.Request) error {
-	return errors.New("System calls are not allowed.")
+	return errors.New("System calls are not allowed")
 }

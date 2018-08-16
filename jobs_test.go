@@ -12,8 +12,8 @@ import (
 const testPrefix = "testjob"
 
 func TestJobs(t *testing.T) {
-	t.Run("PUT", func(t *testing.T) {
-		req := httptest.NewRequest("PUT", "/", nil)
+	t.Run("DELETE", func(t *testing.T) {
+		req := httptest.NewRequest("DELETE", "/", nil)
 		length := req.ContentLength
 
 		if err := jobs(req); err != nil {
@@ -64,56 +64,56 @@ func TestJobs(t *testing.T) {
 		})
 	})
 
-	t.Run("POST", func(t *testing.T) {
-		t.Run("Should prepend Id in Job Payload", func(t *testing.T) {
-			body, err := ioutil.ReadFile("./testdata/jobs.json")
-			if err != nil {
-				t.Fatal(err)
-			}
+	for _, m := range []string{"PUT", "POST"} {
+		t.Run(m, func(t *testing.T) {
+			t.Run("Should prepend Id in Job Payload", func(t *testing.T) {
+				body, err := ioutil.ReadFile("./testdata/jobs.json")
+				if err != nil {
+					t.Fatal(err)
+				}
 
-			req := httptest.NewRequest(
-				"POST",
-				"/v1/jobs",
-				ioutil.NopCloser(bytes.NewBuffer(body)),
-			)
+				req := httptest.NewRequest(
+					m,
+					"/v1/jobs",
+					ioutil.NopCloser(bytes.NewBuffer(body)),
+				)
 
-			if err := jobs(req); err != nil {
-				t.Fatal(err)
-			}
+				if err := jobs(req); err != nil {
+					t.Fatal(err)
+				}
 
-			b, err := parseJob(req)
-			if err != nil {
-				t.Fatal(err)
-			}
+				b, err := parseJob(req)
+				if err != nil {
+					t.Fatal(err)
+				}
 
-			if !strings.HasPrefix(b.Job["ID"].(string), testPrefix) {
-				t.Fatal("Should have altered Job Prefix")
-			}
+				if !strings.HasPrefix(b.Job["ID"].(string), testPrefix) {
+					t.Fatal("Should have altered Job Prefix")
+				}
 
-			if !strings.HasPrefix(b.Job["Name"].(string), testPrefix) {
-				t.Fatal("Should have altered Job Name Prefix")
-			}
+				if !strings.HasPrefix(b.Job["Name"].(string), testPrefix) {
+					t.Fatal("Should have altered Job Name Prefix")
+				}
+			})
+
+			t.Run("Should not touch malformed Job payload", func(t *testing.T) {
+				body, err := ioutil.ReadFile("./testdata/search.json")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				req := httptest.NewRequest(
+					m, "/v1/jobs", ioutil.NopCloser(bytes.NewBuffer(body)),
+				)
+
+				if err := jobs(req); err == nil {
+					t.Fatal("Should have returned an error")
+				} else if err.Error() != "Cannot parse body to Job" {
+					t.Fatal("Incorrect error string")
+				}
+			})
 		})
-
-		t.Run("Should not touch malformed Job payload", func(t *testing.T) {
-			body, err := ioutil.ReadFile("./testdata/search.json")
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			req := httptest.NewRequest(
-				"POST",
-				"/v1/jobs",
-				ioutil.NopCloser(bytes.NewBuffer(body)),
-			)
-
-			if err := jobs(req); err == nil {
-				t.Fatal("Should have returned an error")
-			} else if err.Error() != "Cannot parse body to Job" {
-				t.Fatal("Incorrect error string")
-			}
-		})
-	})
+	}
 }
 
 func TestMain(t *testing.M) {

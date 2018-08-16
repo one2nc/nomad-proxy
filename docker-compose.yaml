@@ -1,0 +1,7 @@
+version: '2.0'
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tsl8/nomad-proxy

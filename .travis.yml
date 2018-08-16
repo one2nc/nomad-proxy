@@ -1,0 +1,19 @@
+language: go
+
+go:
+  - "1.10"
+
+script:
+  - make protodep
+  - export PROTO_VERSION=3.5.1
+  - export PATH="/tmp/proto/${PROTO_VERSION}/bin/":$PATH
+  - docker-compose -f docker-compose.yaml up -d consul
+  - make build
+  - make test
+  - make build_image
+
+deploy:
+  - provider: script
+    script: make upload_image
+    on:
+      branch: master

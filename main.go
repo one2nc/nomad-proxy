@@ -21,7 +21,7 @@ const Version = "0.1.0"
 var (
 	prefix     = uuid.NewV4().String()
 	port       = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
-	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').Default(prefix).String()
+	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').Default(prefix).OverrideDefaultFromEnvar("JOB_PREFIX").String()
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").OverrideDefaultFromEnvar("SERVER_ADDR").String()
 )

@@ -3,6 +3,9 @@ language: go
 go:
   - "1.10"
 
+install:
+  - echo "Hello World"
+
 before_script:
   - make protodep
   - export PROTO_VERSION=3.5.1

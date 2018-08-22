@@ -1,17 +1,9 @@
-# Ignore all
-*
+nomad-proxy
 
-# Unignore all with extensions
-!*.*
-
-# Unignore all dirs
-!*/
-
-.idea*
 *.iml
 vendor/*
 
 API.md
 docs.go
-
+.idea
 *_OSX.sh

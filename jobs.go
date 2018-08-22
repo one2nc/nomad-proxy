@@ -41,7 +41,7 @@ func jobs(r *http.Request) error {
 			return err
 		}
 
-		b.Job["ID"] = fmt.Sprintf("%v-%v", *jobPrefix, b.Job["ID"])
+		b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
 		b.Job["Name"] = b.Job["ID"]
 		if err := newBody(r, &b); err != nil {
 			return err

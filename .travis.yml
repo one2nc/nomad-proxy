@@ -3,6 +3,9 @@ language: go
 go:
   - "1.10"
 
+services:
+  - docker
+
 install:
   - echo "Hello World"
 

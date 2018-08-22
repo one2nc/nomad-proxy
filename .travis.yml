@@ -7,7 +7,6 @@ install:
   - echo "Hello World"
 
 script:
-  - docker-compose -f docker-compose.yaml up -d consul
   - make build
   - make test
   - make build_image

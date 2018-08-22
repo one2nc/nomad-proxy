@@ -6,11 +6,6 @@ go:
 install:
   - echo "Hello World"
 
-before_script:
-  - make protodep
-  - export PROTO_VERSION=3.5.1
-  - export PATH="/tmp/proto/${PROTO_VERSION}/bin/":$PATH
-
 script:
   - docker-compose -f docker-compose.yaml up -d consul
   - make build

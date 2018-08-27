@@ -83,7 +83,7 @@ func modifyRequest(r *http.Request) error {
 // Main Engine function.
 func main() {
 
-	// Setup and Parse Kinngpin.
+	// Setup and Parse Kingpin.
 	kingpin.Version(Version)
 	kingpin.Parse()
 

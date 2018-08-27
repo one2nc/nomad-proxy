@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 type jobPayload struct {
@@ -41,7 +42,11 @@ func jobs(r *http.Request) error {
 			return err
 		}
 
-		b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
+		jID := b.Job["ID"].(string)
+		if !strings.HasPrefix(jID, *jobPrefix) {
+			b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
+		}
+
 		b.Job["Name"] = b.Job["ID"]
 		if err := newBody(r, &b); err != nil {
 			return err

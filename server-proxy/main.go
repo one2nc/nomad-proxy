@@ -29,11 +29,6 @@ func handler(conn net.Conn) {
 		return
 	}
 
-	if tcp, ok := conn.(*net.TCPConn); ok {
-		tcp.SetKeepAlive(true)
-		tcp.SetNoDelay(true)
-	}
-
 	tlsproxy.DefaultHandle(conn)
 }
 

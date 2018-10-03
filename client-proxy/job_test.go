@@ -19,7 +19,7 @@ func TestJob(t *testing.T) {
 			req := httptest.NewRequest("GET", "/v1/job/hello", nil)
 			if err := job(req); err == nil {
 				t.Fatal("Should have failed")
-			} else if err.Error() != fmt.Sprintf("Jobs should begin with a prefix %v", *jobPrefix) {
+			} else if err.Error() != fmt.Sprintf("jobs should begin with a prefix %v", *jobPrefix) {
 				t.Error("Should fail with right message", err.Error())
 			}
 		})

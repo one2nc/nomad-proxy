@@ -152,7 +152,7 @@ func TestJobs(t *testing.T) {
 
 				if err := jobs(req); err == nil {
 					t.Fatal("Should have returned an error")
-				} else if err.Error() != "Cannot parse body to Job" {
+				} else if err.Error() != "cannot parse body to Job" {
 					t.Fatal("Incorrect error string ", err.Error())
 				}
 			})

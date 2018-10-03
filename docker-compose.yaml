@@ -3,10 +3,10 @@ services:
   client-proxy:
     build:
       context: ./client-proxy
-      dockerfile: ./client-proxy/Dockerfile
+      dockerfile: Dockerfile
     image: tsl8/nomad-client-proxy
   server-proxy:
     build:
       context: ./server-proxy
-      dockerfile: ./server-proxy/Dockerfile
+      dockerfile: Dockerfile
     image: tsl8/nomad-server-proxy

@@ -10,9 +10,9 @@ install:
   - echo "Hello World"
 
 script:
-  - make build
+  - make build_linux
   - make test
-  - make build_image
+  - make build_images
 
 deploy:
   - provider: script

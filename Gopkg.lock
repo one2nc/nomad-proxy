@@ -17,10 +17,51 @@
   revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
 
 [[projects]]
+  name = "github.com/cloudflare/cfssl"
+  packages = [
+    "crypto/pkcs7",
+    "errors",
+    "helpers",
+    "helpers/derhelpers",
+    "log"
+  ]
+  revision = "5d63dbd981b5c408effbb58c442d54761ff94fbd"
+  version = "1.3.2"
+
+[[projects]]
+  name = "github.com/google/certificate-transparency-go"
+  packages = [
+    ".",
+    "asn1",
+    "tls",
+    "x509",
+    "x509/pkix"
+  ]
+  revision = "5ab67e519c93568ac3ee50fd6772a5bcf8aa460d"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
   version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/tsocial/cfssl"
+  packages = ["revoke"]
+  revision = "bd4e730d5cf68d132d5b9e4a747318a4e6c10d64"
+  version = "1.3.3"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = [
+    "cryptobyte",
+    "cryptobyte/asn1",
+    "ocsp",
+    "pkcs12",
+    "pkcs12/internal/rc2"
+  ]
+  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
   name = "gopkg.in/alecthomas/kingpin.v2"
@@ -31,6 +72,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "60e9658069194cbaa0d1c7672995e34bcd728d31934dfcd715ae402d62f81b66"
+  inputs-digest = "6795052221ea7bed2910f6fec301a6e40621482271083ec83ffdafe20b23c93d"
   solver-name = "gps-cdcl"
   solver-version = 1

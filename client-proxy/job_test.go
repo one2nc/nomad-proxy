@@ -20,7 +20,7 @@ func TestJob(t *testing.T) {
 			if err := job(req); err == nil {
 				t.Fatal("Should have failed")
 			} else if err.Error() != fmt.Sprintf("Jobs should begin with a prefix %v", *jobPrefix) {
-				t.Error("Should fail with right message")
+				t.Error("Should fail with right message", err.Error())
 			}
 		})
 	})

@@ -9,7 +9,7 @@ import (
 // /v1/job overrides.
 func job(r *http.Request) error {
 	if !strings.HasPrefix(r.URL.Path, "/v1/job/"+*jobPrefix) {
-		return fmt.Errorf("Jobs should begin with a prefix %v", *jobPrefix)
+		return fmt.Errorf("jobs should begin with a prefix %v", *jobPrefix)
 	}
 	return nil
 }

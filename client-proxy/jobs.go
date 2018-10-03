@@ -24,7 +24,7 @@ func parseJob(r *http.Request) (*jobPayload, error) {
 	}
 
 	if b.Job == nil {
-		return nil, fmt.Errorf("Cannot parse body to Job")
+		return nil, fmt.Errorf("cannot parse body to Job")
 	}
 
 	return b, nil

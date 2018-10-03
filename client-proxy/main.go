@@ -21,9 +21,10 @@ const Version = "0.1.0"
 var (
 	prefix     = uuid.NewV4().String()
 	port       = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
-	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').Default(prefix).OverrideDefaultFromEnvar("JOB_PREFIX").String()
+	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').
+		Default(prefix).Envar("JOB_PREFIX").String()
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
-			Short('s').Default("http://127.0.0.1:8080").OverrideDefaultFromEnvar("SERVER_ADDR").String()
+			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
 )
 
 // Transformer accepts a Request and make in-place changes.
@@ -58,10 +59,10 @@ func newBody(r *http.Request, i interface{}) error {
 }
 
 var rules = []Transformation{
-	Transformation{path: "/v1/search", tx: ruleTransformer(search)},
-	Transformation{path: "/v1/jobs", tx: ruleTransformer(jobs)},
-	Transformation{path: "/v1/job", tx: ruleTransformer(job)},
-	Transformation{path: "/v1/system", tx: ruleTransformer(system)},
+	{path: "/v1/search", tx: ruleTransformer(search)},
+	{path: "/v1/jobs", tx: ruleTransformer(jobs)},
+	{path: "/v1/job", tx: ruleTransformer(job)},
+	{path: "/v1/system", tx: ruleTransformer(system)},
 }
 
 // Accept a Request. Walk through the rules.

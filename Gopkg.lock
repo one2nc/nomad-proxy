@@ -46,10 +46,10 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "new_code"
+  branch = "master"
   name = "github.com/tsocial/catoolkit"
   packages = ["tlsproxy"]
-  revision = "66aa1f91462c8f5375a07c7e0ffff82968a4a647"
+  revision = "d348ec1cc0fea67d26b1de019c393acf83539a2d"
 
 [[projects]]
   name = "github.com/tsocial/cfssl"
@@ -78,6 +78,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "87954fd5ca59b69ca5a0f097d08447f827021d7919e69f1b7dc6e9979bb9157a"
+  inputs-digest = "793017c563f35c97263f5df56bc0db0a33e85f678590b039b9f791ce52b6061d"
   solver-name = "gps-cdcl"
   solver-version = 1

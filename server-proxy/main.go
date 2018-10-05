@@ -18,14 +18,14 @@ func handler(conn net.Conn) {
 	}
 
 	// Means its RPC with tls
-	if buf[0] == 0x04 {
-		conn = tlsproxy.WrapTls(conn)
-
-		if conn == nil {
-			return
-		}
-	} else {
+	if buf[0] != 0x04 {
 		log.Println("NON TLS connection found")
+		return
+	}
+
+	conn = tlsproxy.WrapTls(conn)
+
+	if conn == nil {
 		return
 	}
 

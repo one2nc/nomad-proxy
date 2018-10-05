@@ -1,7 +1,12 @@
 version: '2.0'
 services:
-  proxy:
+  client-proxy:
     build:
-      context: .
+      context: ./client-proxy
       dockerfile: Dockerfile
-    image: tsl8/nomad-proxy
+    image: tsl8/nomad-client-proxy
+  server-proxy:
+    build:
+      context: ./server-proxy
+      dockerfile: Dockerfile
+    image: tsl8/nomad-server-proxy

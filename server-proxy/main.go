@@ -20,6 +20,7 @@ func handler(conn net.Conn) {
 	// Means its RPC with tls
 	if buf[0] != 0x04 {
 		log.Println("NON TLS connection found")
+		conn.Close()
 		return
 	}
 

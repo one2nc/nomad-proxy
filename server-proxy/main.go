@@ -13,7 +13,6 @@ func handler(conn net.Conn) {
 		if err != io.EOF {
 			log.Println("failed to read first RPC byte", "error", err)
 		}
-		conn.Close()
 		return
 	}
 

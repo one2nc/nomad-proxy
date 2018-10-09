@@ -13,14 +13,12 @@ func handler(conn net.Conn) {
 		if err != io.EOF {
 			log.Println("failed to read first RPC byte", "error", err)
 		}
-		conn.Close()
 		return
 	}
 
 	// Means its RPC with tls
 	if buf[0] != 0x04 {
 		log.Println("NON TLS connection found")
-		conn.Close()
 		return
 	}
 

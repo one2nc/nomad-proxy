@@ -49,7 +49,7 @@
   branch = "master"
   name = "github.com/tsocial/catoolkit"
   packages = ["tlsproxy"]
-  revision = "44c150af5b17a927454bbd70a753d5de6ff1883b"
+  revision = "1c0cfbf45d5bc170b32ebe990ee33eaf67c2ba2d"
 
 [[projects]]
   name = "github.com/tsocial/cfssl"

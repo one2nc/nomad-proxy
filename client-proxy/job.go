@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	)
+)
 
 // /v1/job overrides.
 func job(r *http.Request) error {

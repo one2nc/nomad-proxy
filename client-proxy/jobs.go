@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	)
+)
 
 const NomadToken = "X-Nomad-Token"
 
-type  jobPayload struct {
+type jobPayload struct {
 	Job map[string]interface{} `json:"Job"`
 }
 

@@ -5,26 +5,27 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-		"net/http"
+	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
 
-	"github.com/satori/go.uuid"
-	"gopkg.in/alecthomas/kingpin.v2"
-		"log"
-	"github.com/tsocial/ts2fa/otp"
 	"io"
+	"log"
+
+	"github.com/satori/go.uuid"
+	"github.com/tsocial/ts2fa/otp"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version of this Proxy.
 const Version = "0.1.0"
 
 var (
-	prefix     = uuid.NewV4().String()
-	port       = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
-	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').
-		Default(prefix).Envar("JOB_PREFIX").String()
+	prefix    = uuid.NewV4().String()
+	port      = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
+	jobPrefix = kingpin.Flag("job", "Job Prefix").Short('j').
+			Default(prefix).Envar("JOB_PREFIX").String()
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
 	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
@@ -47,7 +48,7 @@ type Transformation struct {
 
 type Interceptor struct {
 	path string
-	in http.RoundTripper
+	in   http.RoundTripper
 }
 
 // Sugar so that I don't have to write structs to implement single-func Transformer.
@@ -114,7 +115,7 @@ func interceptRequest(r *http.Request) (*http.Response, error) {
 
 type customTripper struct {
 	tripper http.RoundTripper
-	origin *url.URL
+	origin  *url.URL
 }
 
 func (c *customTripper) RoundTrip(req *http.Request) (*http.Response, error) {

@@ -129,6 +129,12 @@ func (c *customTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 		return resp, err
 	}
 
+	// check for 2fa token
+	if err := validateToken(req.URL.Path, req.Method, req.Header.Get(NomadToken)); err != nil {
+		log.Printf("2fa authentication failed for %v, %v", req.URL.Path, req.Method)
+		return newResponse(req, http.StatusInternalServerError, []byte(err.Error())), nil
+	}
+
 	if err := modifyRequest(req); err != nil {
 		log.Printf("error while modifying request: %+v", err)
 		return newResponse(req, http.StatusInternalServerError, []byte(err.Error())), nil
@@ -164,6 +170,11 @@ func initTs2fa(r io.ReadCloser) error {
 func validateToken(path, method, token string) error {
 	if ts2faObj == nil {
 		log.Println("2FA is not enabled")
+		return nil
+	}
+
+	// Only validate for these methods generically
+	if method != http.MethodPut && method != http.MethodPost && method != http.MethodDelete {
 		return nil
 	}
 

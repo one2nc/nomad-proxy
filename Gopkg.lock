@@ -99,7 +99,7 @@
   branch = "master"
   name = "github.com/tsocial/ts2fa"
   packages = ["otp"]
-  revision = "e4e88a9c9d9b6b0772a567a6b5b69e6a5faee31e"
+  revision = "b7832c19b1308f5878442dda9961b0f456183564"
 
 [[projects]]
   branch = "master"

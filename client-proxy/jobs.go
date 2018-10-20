@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -38,16 +39,10 @@ func jobs(r *http.Request) error {
 		val := r.URL.Query()
 		val.Set("prefix", *jobPrefix)
 		r.URL.RawQuery = val.Encode()
-	}
-
-	if r.Method != http.MethodPost && r.Method != http.MethodPut {
 		return nil
 	}
 
-	// add a check for 2fa
-	if err := validateToken(r.URL.Path, r.Method, r.Header.Get(NomadToken)); err != nil {
-		return err
-	}
+	log.Println(r.Method)
 
 	b, err := parseJob(r)
 	if err != nil {

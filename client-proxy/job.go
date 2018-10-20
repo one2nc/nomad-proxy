@@ -12,9 +12,5 @@ func job(r *http.Request) error {
 		return fmt.Errorf("jobs should begin with a prefix %v", *jobPrefix)
 	}
 
-	if r.Method != http.MethodDelete {
-		return nil
-	}
-
-	return validateToken(r.URL.Path, r.Method, r.Header.Get(NomadToken))
+	return nil
 }

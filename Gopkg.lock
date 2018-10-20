@@ -17,6 +17,16 @@
   revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
 
 [[projects]]
+  name = "github.com/boombuler/barcode"
+  packages = [
+    ".",
+    "qr",
+    "utils"
+  ]
+  revision = "3cfea5ab600ae37946be2b763b8ec2c1cf2d272d"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/cloudflare/cfssl"
   packages = [
     "crypto/pkcs7",
@@ -27,6 +37,12 @@
   ]
   revision = "5d63dbd981b5c408effbb58c442d54761ff94fbd"
   version = "1.3.2"
+
+[[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/google/certificate-transparency-go"
@@ -40,10 +56,32 @@
   revision = "5ab67e519c93568ac3ee50fd6772a5bcf8aa460d"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pquerna/otp"
+  packages = [
+    ".",
+    "hotp",
+    "totp"
+  ]
+  revision = "b7b89250c468c06871d3837bee02e2d5c155ae19"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
   version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
+  version = "v1.2.2"
 
 [[projects]]
   branch = "master"
@@ -56,6 +94,12 @@
   packages = ["revoke"]
   revision = "bd4e730d5cf68d132d5b9e4a747318a4e6c10d64"
   version = "1.3.3"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/tsocial/ts2fa"
+  packages = ["otp"]
+  revision = "e4e88a9c9d9b6b0772a567a6b5b69e6a5faee31e"
 
 [[projects]]
   branch = "master"
@@ -78,6 +122,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "793017c563f35c97263f5df56bc0db0a33e85f678590b039b9f791ce52b6061d"
+  inputs-digest = "337bc29cce67ac7d7a752e875a8cb91679618fa5d3165245582b14d130e391c3"
   solver-name = "gps-cdcl"
   solver-version = 1

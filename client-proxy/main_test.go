@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http/httptest"
 	"testing"
-)
+	)
 
 func TestNewBody(t *testing.T) {
 		req := httptest.NewRequest("GET", "/v2/jobs", nil)

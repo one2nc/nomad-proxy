@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 var sampleResponse = `{
@@ -18,21 +18,20 @@ var sampleResponse = `{
 }`
 
 func acl(r *http.Request) (*http.Response, error) {
-	if r.Method == http.MethodGet {
-		var bag interface{}
-		respBody := fmt.Sprintf(sampleResponse, r.Header.Get(NomadToken))
-		if err := json.Unmarshal([]byte(respBody), &bag); err != nil {
-			return nil, err
-		}
-
-		body, err := json.Marshal(bag)
-		if err != nil {
-			return nil, err
-		}
-
-		t := newResponse(r, http.StatusOK, body)
-
-		return t, nil
+	if r.Method != http.MethodGet {
+		return nil, nil
 	}
-	return nil, nil
+
+	var bag interface{}
+	respBody := fmt.Sprintf(sampleResponse, r.Header.Get(NomadToken))
+	if err := json.Unmarshal([]byte(respBody), &bag); err != nil {
+		return nil, err
+	}
+
+	body, err := json.Marshal(bag)
+	if err != nil {
+		return nil, err
+	}
+
+	return newResponse(r, http.StatusOK, body), nil
 }

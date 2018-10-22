@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -42,7 +41,9 @@ func jobs(r *http.Request) error {
 		return nil
 	}
 
-	log.Println(r.Method)
+	if r.Method == http.MethodDelete {
+		return nil
+	}
 
 	b, err := parseJob(r)
 	if err != nil {

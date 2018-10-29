@@ -44,3 +44,11 @@
 [[constraint]]
   branch = "master"
   name = "github.com/tsocial/catoolkit"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.2.2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/tsocial/ts2fa"

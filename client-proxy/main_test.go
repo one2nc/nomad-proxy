@@ -8,14 +8,14 @@ import (
 )
 
 func TestNewBody(t *testing.T) {
-		req := httptest.NewRequest("GET", "/v2/jobs", nil)
-		if err := newBody(req, 1); err != nil {
-			t.Fatal(err)
-		}
+	req := httptest.NewRequest("GET", "/v2/jobs", nil)
+	if err := newBody(req, 1); err != nil {
+		t.Fatal(err)
+	}
 
-		if req.ContentLength != 1 {
-			t.Fatal("Content Length should have been 1")
-		}
+	if req.ContentLength != 1 {
+		t.Fatal("Content Length should have been 1")
+	}
 }
 
 func TestModifyRequest(t *testing.T) {

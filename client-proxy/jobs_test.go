@@ -2,14 +2,14 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http/httptest"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
-	"encoding/json"
-	"fmt"
-	"regexp"
 )
 
 const testPrefix = "testjob"

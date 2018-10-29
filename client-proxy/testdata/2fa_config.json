@@ -1,0 +1,7 @@
+{
+    "*": {
+        "DELETE": ["abcd"],
+        "PUT": ["abcd"],
+        "POST": ["abcd"]
+    }
+}

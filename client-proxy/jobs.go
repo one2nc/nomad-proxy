@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const NomadToken = "X-Nomad-Token"
+
 type jobPayload struct {
 	Job map[string]interface{} `json:"Job"`
 }
@@ -36,21 +38,26 @@ func jobs(r *http.Request) error {
 		val := r.URL.Query()
 		val.Set("prefix", *jobPrefix)
 		r.URL.RawQuery = val.Encode()
-	} else if r.Method == "POST" || r.Method == "PUT" {
-		b, err := parseJob(r)
-		if err != nil {
-			return err
-		}
+		return nil
+	}
 
-		jID := b.Job["ID"].(string)
-		if !strings.HasPrefix(jID, *jobPrefix) {
-			b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
-		}
+	if r.Method == http.MethodDelete {
+		return nil
+	}
 
-		b.Job["Name"] = b.Job["ID"]
-		if err := newBody(r, &b); err != nil {
-			return err
-		}
+	b, err := parseJob(r)
+	if err != nil {
+		return err
+	}
+
+	jID := b.Job["ID"].(string)
+	if !strings.HasPrefix(jID, *jobPrefix) {
+		b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
+	}
+
+	b.Job["Name"] = b.Job["ID"]
+	if err := newBody(r, &b); err != nil {
+		return err
 	}
 
 	return nil

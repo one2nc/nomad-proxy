@@ -5,26 +5,32 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
 
-	uuid "github.com/satori/go.uuid"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"io"
+	"log"
+
+	"github.com/satori/go.uuid"
+	"github.com/tsocial/ts2fa/otp"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version of this Proxy.
 const Version = "0.1.0"
 
 var (
-	prefix     = uuid.NewV4().String()
-	port       = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
-	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').
-		Default(prefix).Envar("JOB_PREFIX").String()
+	prefix    = uuid.NewV4().String()
+	port      = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
+	jobPrefix = kingpin.Flag("job", "Job Prefix").Short('j').
+			Default(prefix).Envar("JOB_PREFIX").String()
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
+	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
+
+	ts2faObj *ts2fa.Ts2FA
 )
 
 // Transformer accepts a Request and make in-place changes.
@@ -40,10 +46,22 @@ type Transformation struct {
 	tx   Transformer
 }
 
+type Interceptor struct {
+	path string
+	in   http.RoundTripper
+}
+
 // Sugar so that I don't have to write structs to implement single-func Transformer.
 type ruleTransformer func(*http.Request) error
 
 func (f ruleTransformer) Transform(r *http.Request) error {
+	return f(r)
+}
+
+// following same patter as above
+type ruleInterceptor func(*http.Request) (*http.Response, error)
+
+func (f ruleInterceptor) RoundTrip(r *http.Request) (*http.Response, error) {
 	return f(r)
 }
 
@@ -65,6 +83,10 @@ var rules = []Transformation{
 	{path: "/v1/system", tx: ruleTransformer(system)},
 }
 
+var interceptors = []Interceptor{
+	{path: "/v1/acl/token/", in: ruleInterceptor(acl)},
+}
+
 // Accept a Request. Walk through the rules.
 // The first path that matches apply the corresponding transformer.
 func modifyRequest(r *http.Request) error {
@@ -81,9 +103,102 @@ func modifyRequest(r *http.Request) error {
 	return nil
 }
 
+func interceptRequest(r *http.Request) (*http.Response, error) {
+	for _, i := range interceptors {
+		if !strings.HasPrefix(r.URL.Path, i.path) {
+			continue
+		}
+		return i.in.RoundTrip(r)
+	}
+	return nil, nil
+}
+
+type customTripper struct {
+	tripper http.RoundTripper
+	origin  *url.URL
+}
+
+func (c *customTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Add("X-Forwarded-Host", req.Host)
+	req.Header.Add("X-Origin-Host", c.origin.Host)
+	req.URL.Scheme = c.origin.Scheme
+	req.URL.Host = c.origin.Host
+
+	//Check for Intercepted endpoints
+	if resp, err := interceptRequest(req); err != nil || resp != nil {
+		return resp, err
+	}
+
+	// check for 2fa token
+	if err := validateToken(req.URL.Path, req.Method, req.Header.Get(NomadToken)); err != nil {
+		log.Printf("2fa authentication failed for %v, %v", req.URL.Path, req.Method)
+		return newResponse(req, http.StatusInternalServerError, []byte(err.Error())), nil
+	}
+
+	if err := modifyRequest(req); err != nil {
+		log.Printf("error while modifying request: %+v", err)
+		return newResponse(req, http.StatusInternalServerError, []byte(err.Error())), nil
+	}
+	log.Println("Hitting: ", req.Method, " ", req.URL)
+
+	resp, err := c.tripper.RoundTrip(req)
+	return resp, err
+}
+
+func initTs2fa(r io.ReadCloser) error {
+	if *ts2faConfig == nil {
+		log.Println("2FA is not enabled")
+		return nil
+	}
+
+	confBytes, err := ioutil.ReadAll(*ts2faConfig)
+	if err != nil {
+		return err
+	}
+
+	defer r.Close()
+
+	var conf ts2fa.Ts2FAConf
+	if err := json.Unmarshal(confBytes, &conf); err != nil {
+		return err
+	}
+
+	ts2faObj = ts2fa.New(&conf)
+	return nil
+}
+
+func validateToken(path, method, token string) error {
+	if ts2faObj == nil {
+		log.Println("2FA is not enabled")
+		return nil
+	}
+
+	// Only validate for these methods generically
+	if method != http.MethodPut && method != http.MethodPost && method != http.MethodDelete {
+		return nil
+	}
+
+	if token == "" {
+		return fmt.Errorf("token not found")
+	}
+
+	tokens := strings.Split(token, ",")
+	ts2fa.NewPayload(path, method, tokens...)
+
+	ok, err := ts2faObj.Verify(ts2fa.NewPayload(path, method, tokens...))
+	if err != nil {
+		return err
+	}
+
+	if !ok {
+		return fmt.Errorf("tokens did match, please check values or the order")
+	}
+
+	return nil
+}
+
 // Main Engine function.
 func main() {
-
 	// Setup and Parse Kingpin.
 	kingpin.Version(Version)
 	kingpin.Parse()
@@ -91,28 +206,18 @@ func main() {
 	// Parse the Backend URL, ensure it works, panic if it doesnt.
 	origin, err := url.Parse(*serverAddr)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+
+	if *ts2faConfig != nil {
+		if err := initTs2fa(*ts2faConfig); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Create a new SingleHost Proxy
 	reverseProxy := httputil.NewSingleHostReverseProxy(origin)
-	reverseProxy.ModifyResponse = func(res *http.Response) error {
-		return nil
-	}
-
-	// Director accepts the incoming request and modifies it, if needed.
-	reverseProxy.Director = func(req *http.Request) {
-		req.Header.Add("X-Forwarded-Host", req.Host)
-		req.Header.Add("X-Origin-Host", origin.Host)
-		req.URL.Scheme = origin.Scheme
-		req.URL.Host = origin.Host
-
-		if err := modifyRequest(req); err != nil {
-			log.Println("Cannot render", req.URL)
-			panic(err)
-		}
-		log.Println("Hitting: ", req.Method, " ", req.URL)
-	}
+	reverseProxy.Transport = &customTripper{http.DefaultTransport, origin}
 
 	// Start the Server. Listen to the specified Port.
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), reverseProxy); err != nil {

@@ -1,5 +1,6 @@
 CLIENT_REPO := "tsl8/nomad-client-proxy"
 SERVER_REPO := "tsl8/nomad-server-proxy"
+SHELL := /bin/bash
 
 .PHONY: nomad-proxy
 
@@ -43,3 +44,15 @@ upload_image: docker_login
 
 docker_login:
 	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
+
+run_nomad:
+	bash client-proxy/scripts/nomad.sh
+
+validate_nomad_server_tls: run_nomad
+	curl -k https://localhost:4646; [[ $$? -eq "35" ]] && /bin/true
+
+run_client_proxy: build_client_proxy
+	./client-proxy/nomad-client-proxy --root-ca-file=/tmp/cert-chain.pem --cert-file=/tmp/client.pem --key-file=/tmp/client-key.pem --server-addr=https://localhost:4646 2>&1 &
+
+validate_client_proxy: run_client_proxy
+	curl -k http://localhost:9988; [[ $$? -eq "0" ]] && /bin/true

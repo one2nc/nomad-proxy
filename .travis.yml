@@ -13,6 +13,8 @@ script:
   - make build_linux
   - make test
   - make build_images
+  - make validate_nomad_server_tls
+  - make validate_client_proxy
 
 deploy:
   - provider: script

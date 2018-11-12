@@ -45,16 +45,19 @@ upload_image: docker_login
 docker_login:
 	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
 
-run_nomad:
+copy_certs:
+	cp -r client-proxy/testdata/* /tmp/
+
+run_nomad: copy_certs
 	bash client-proxy/scripts/nomad.sh
 
 validate_nomad_server_tls: run_nomad
-	sleep 50
+	sleep 5
 	curl -k https://localhost:4646; [[ $$? -eq "35" ]] && /bin/true
 
 run_client_proxy: build_client_proxy
 	./client-proxy/nomad-client-proxy --root-ca-file=/tmp/cert-chain.pem --cert-file=/tmp/client.pem --key-file=/tmp/client-key.pem --server-addr=https://localhost:4646 2>&1 &
 
 validate_client_proxy: validate_nomad_server_tls run_client_proxy
-	sleep 50
+	sleep 5
 	curl -k http://localhost:9988; [[ $$? -eq "0" ]] && /bin/true

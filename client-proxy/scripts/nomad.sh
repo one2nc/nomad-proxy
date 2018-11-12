@@ -17,9 +17,6 @@ sudo mkdir -p /etc/nomad.d
 sudo chmod a+w /etc/nomad.d
 
 # Move the certs to /tmp
-ls -al
-echo $pwd
-sudo cp -r ../testdata/* /tmp/
 
 (
 cat <<-EOF

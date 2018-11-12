@@ -16,6 +16,9 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/tsocial/ts2fa/otp"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"crypto/tls"
+	"crypto/x509"
+	"os"
 )
 
 // Version of this Proxy.
@@ -29,6 +32,10 @@ var (
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
 	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
+
+	rootFile = kingpin.Flag("root-ca-file", "RootCA File").Envar("ROOT_CA_FILE").File()
+	certFile = kingpin.Flag("cert-file", "Cert File").Envar("CERT_FILE").File()
+	keyFile  = kingpin.Flag("key-file", "Key File").Envar("KEY_FILE").File()
 
 	ts2faObj *ts2fa.Ts2FA
 )
@@ -199,6 +206,8 @@ func validateToken(path, method, token string) error {
 
 // Main Engine function.
 func main() {
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+
 	// Setup and Parse Kingpin.
 	kingpin.Version(Version)
 	kingpin.Parse()
@@ -217,10 +226,45 @@ func main() {
 
 	// Create a new SingleHost Proxy
 	reverseProxy := httputil.NewSingleHostReverseProxy(origin)
-	reverseProxy.Transport = &customTripper{http.DefaultTransport, origin}
+
+	t, tErr := makeTransport(*certFile, *keyFile, *rootFile)
+	if tErr != nil {
+		log.Fatal(tErr)
+	}
+
+	reverseProxy.Transport = &customTripper{t, origin}
 
 	// Start the Server. Listen to the specified Port.
 	if err := http.ListenAndServe(fmt.Sprintf(":%v", *port), reverseProxy); err != nil {
 		panic(err)
 	}
+}
+
+func makeTransport(certFile, keyFile, rootFile *os.File) (http.RoundTripper, error) {
+	if certFile == nil || keyFile == nil || rootFile == nil {
+		log.Println("Falling back to default Transport")
+		return http.DefaultTransport, nil
+	}
+
+	cert, err := tls.LoadX509KeyPair(certFile.Name(), keyFile.Name())
+	if err != nil {
+		return nil, err
+	}
+
+	caCert, err := ioutil.ReadAll(rootFile)
+	if err != nil {
+		return nil, err
+	}
+
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		RootCAs:      caCertPool,
+	}
+
+	tlsConfig.BuildNameToCertificate()
+
+	return &http.Transport{TLSClientConfig: tlsConfig}, nil
 }

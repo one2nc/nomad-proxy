@@ -2,13 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-const NomadToken = "X-Nomad-Token"
+const (
+	NomadToken  = "X-Nomad-Token"
+	Datacenters = "Datacenters"
+)
 
 type jobPayload struct {
 	Job map[string]interface{} `json:"Job"`
@@ -56,6 +60,22 @@ func jobs(r *http.Request) error {
 	}
 
 	b.Job["Name"] = b.Job["ID"]
+
+	// Validate datacenter
+	if b.Job[Datacenters] == nil {
+		return errors.New("datacenter is missing in job")
+	}
+
+	datacentersRaw := b.Job[Datacenters].([]interface{})
+	if len(datacentersRaw) > 1 {
+		return errors.New("only 1 datacenter is supported")
+	}
+
+	dc := datacentersRaw[0].(string)
+	if dc != *datacenter {
+		return fmt.Errorf("invalid datacenter in job, should be %v", *datacenter)
+	}
+
 	if err := newBody(r, &b); err != nil {
 		return err
 	}

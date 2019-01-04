@@ -16,7 +16,7 @@ import (
 
 const (
 	testPrefix = "testjob"
-	testDC     = "test_dc"
+	testDC     = "dc1"
 )
 
 func TestJobs(t *testing.T) {
@@ -191,6 +191,6 @@ func TestJobs(t *testing.T) {
 
 func TestMain(t *testing.M) {
 	*jobPrefix = testPrefix
-	*datacenter = "dc1"
+	*datacenter = testDC
 	os.Exit(t.Run())
 }

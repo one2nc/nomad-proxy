@@ -10,9 +10,14 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-const testPrefix = "testjob"
+const (
+	testPrefix = "testjob"
+	testDC     = "dc1"
+)
 
 func TestJobs(t *testing.T) {
 	t.Run("DELETE", func(t *testing.T) {
@@ -156,11 +161,36 @@ func TestJobs(t *testing.T) {
 					t.Fatal("Incorrect error string ", err.Error())
 				}
 			})
+
+			t.Run("Should fail for invalid datacenter", func(t *testing.T) {
+				body, err := ioutil.ReadFile("./testdata/jobs.json")
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				var b jobPayload
+				if err := json.Unmarshal(body, &b); err != nil {
+					t.Fatal(err)
+				}
+				b.Job["ID"] = fmt.Sprintf("%v_%v", testPrefix, b.Job["ID"])
+				b.Job[Datacenters] = []string{"invalid"}
+
+				newBody, err := json.Marshal(b)
+
+				req := httptest.NewRequest(
+					m, "/v1/jobs", ioutil.NopCloser(bytes.NewBuffer(newBody)),
+				)
+
+				err = jobs(req)
+				assert.NotNil(t, err)
+				assert.True(t, strings.Contains(err.Error(), "invalid datacenter"))
+			})
 		})
 	}
 }
 
 func TestMain(t *testing.M) {
 	*jobPrefix = testPrefix
+	*datacenter = testDC
 	os.Exit(t.Run())
 }

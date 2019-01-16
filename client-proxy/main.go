@@ -13,12 +13,13 @@ import (
 	"io"
 	"log"
 
-	"github.com/satori/go.uuid"
-	"github.com/tsocial/ts2fa/otp"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"crypto/tls"
 	"crypto/x509"
 	"os"
+
+	"github.com/satori/go.uuid"
+	"github.com/tsocial/ts2fa/otp"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version of this Proxy.
@@ -32,6 +33,7 @@ var (
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
 	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
+	datacenter  = kingpin.Flag("dc", "nomad datacenter name").Envar("DC").Required().String()
 
 	rootFile = kingpin.Flag("root-ca-file", "RootCA File").Envar("ROOT_CA_FILE").File()
 	certFile = kingpin.Flag("cert-file", "Cert File").Envar("CERT_FILE").File()

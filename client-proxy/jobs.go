@@ -12,6 +12,7 @@ import (
 const (
 	NomadToken  = "X-Nomad-Token"
 	Datacenters = "Datacenters"
+	Prefix      = "prefix"
 )
 
 type jobPayload struct {
@@ -40,7 +41,13 @@ func parseJob(r *http.Request) (*jobPayload, error) {
 func jobs(r *http.Request) error {
 	if r.Method == "GET" {
 		val := r.URL.Query()
-		val.Set("prefix", *jobPrefix)
+		existingPrefix := val.Get(Prefix)
+		prefix := *jobPrefix
+		if strings.HasPrefix(existingPrefix, *jobPrefix) {
+			prefix = existingPrefix
+		}
+
+		val.Set("prefix", prefix)
 		r.URL.RawQuery = val.Encode()
 		return nil
 	}

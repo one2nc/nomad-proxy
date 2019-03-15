@@ -9,22 +9,22 @@ deps:
 	dep ensure -v
 
 test: deps
-	go test -v ./...
+	env GOCACHE=/tmp go test -v ./...
 
 build_client_proxy: deps
-	env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build -o client-proxy/nomad-client-proxy -a -installsuffix cgo \
+	env GOOS=linux GARCH=amd64 CGO_ENABLED=0 GOCACHE=/tmp go build -o client-proxy/nomad-client-proxy -a -installsuffix cgo \
 		github.com/tsocial/nomad-proxy/client-proxy
 
 build_server_proxy: deps
-	env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build -o server-proxy/nomad-server-proxy -a -installsuffix cgo \
+	env GOOS=linux GARCH=amd64 CGO_ENABLED=0 GOCACHE=/tmp go build -o server-proxy/nomad-server-proxy -a -installsuffix cgo \
 		github.com/tsocial/nomad-proxy/server-proxy
 
 build_linux: build_client_proxy build_server_proxy
 
 build_mac: build_deps
-	env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 go build -o nomad-client-proxy -a -installsuffix \
+	env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 GOCACHE=/tmp go build -o nomad-client-proxy -a -installsuffix \
     		cgo github.com/tsocial/nomad-proxy/client-proxy
-	env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 go build -o nomad-server-proxy -a -installsuffix \
+	env GOOS=darwin GARCH=amd64 CGO_ENABLED=0 GOCACHE=/tmp go build -o nomad-server-proxy -a -installsuffix \
                 cgo github.com/tsocial/nomad-proxy/server-proxy
 
 build_images: build_linux

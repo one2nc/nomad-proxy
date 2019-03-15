@@ -3,125 +3,161 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:315c5f2f60c76d89b871c73f9bd5fe689cad96597afd50fb9992228ef80bdd34"
   name = "github.com/alecthomas/template"
   packages = [
     ".",
-    "parse"
+    "parse",
   ]
+  pruneopts = "UT"
   revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
 
 [[projects]]
   branch = "master"
+  digest = "1:c198fdc381e898e8fb62b8eb62758195091c313ad18e52a3067366e1dda2fb3c"
   name = "github.com/alecthomas/units"
   packages = ["."]
+  pruneopts = "UT"
   revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
 
 [[projects]]
+  digest = "1:7b94d37d65c0445053c6f3e73090e3966c1c29127035492c349e14f25c440359"
   name = "github.com/boombuler/barcode"
   packages = [
     ".",
     "qr",
-    "utils"
+    "utils",
   ]
+  pruneopts = "UT"
   revision = "3cfea5ab600ae37946be2b763b8ec2c1cf2d272d"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:66b0766ab5da003a215354cc60487e39d0ff0158e264c6fab29fa3e7ef263ca8"
   name = "github.com/cloudflare/cfssl"
   packages = [
     "crypto/pkcs7",
     "errors",
     "helpers",
     "helpers/derhelpers",
-    "log"
+    "log",
   ]
+  pruneopts = "UT"
   revision = "5d63dbd981b5c408effbb58c442d54761ff94fbd"
   version = "1.3.2"
 
 [[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
+  pruneopts = "UT"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:fabe4bb8fadac9fd769267f14316ed84a86cd49e722c5e65f4881ae0082bf76f"
   name = "github.com/google/certificate-transparency-go"
   packages = [
     ".",
     "asn1",
     "tls",
     "x509",
-    "x509/pkix"
+    "x509/pkix",
   ]
+  pruneopts = "UT"
   revision = "5ab67e519c93568ac3ee50fd6772a5bcf8aa460d"
 
 [[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
+  pruneopts = "UT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:6c7a3f738e37a1c7ad3d56122a34932140654d51a57e01f8613cdf3eaf050911"
   name = "github.com/pquerna/otp"
   packages = [
     ".",
     "hotp",
-    "totp"
+    "totp",
   ]
+  pruneopts = "UT"
   revision = "b7b89250c468c06871d3837bee02e2d5c155ae19"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:274f67cb6fed9588ea2521ecdac05a6d62a8c51c074c1fccc6a49a40ba80e925"
   name = "github.com/satori/go.uuid"
   packages = ["."]
+  pruneopts = "UT"
   revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
   version = "v1.2.0"
 
 [[projects]]
+  digest = "1:18752d0b95816a1b777505a97f71c7467a8445b8ffb55631a7bf779f6ba4fa83"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
+  pruneopts = "UT"
   revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
   version = "v1.2.2"
 
 [[projects]]
   branch = "master"
+  digest = "1:4d869924ab08a2f12243fa94f6bd57f9fc0b8d78ae307d1b8400482f012aeacb"
   name = "github.com/tsocial/catoolkit"
   packages = ["tlsproxy"]
+  pruneopts = "UT"
   revision = "56411e75a0aef412571e8aec3677c304dc2a230d"
 
 [[projects]]
+  digest = "1:4069aaefc8b975f84debd1604a4ea0b5aec39eace937f22df553328efbc09057"
   name = "github.com/tsocial/cfssl"
   packages = ["revoke"]
+  pruneopts = "UT"
   revision = "bd4e730d5cf68d132d5b9e4a747318a4e6c10d64"
   version = "1.3.3"
 
 [[projects]]
   branch = "master"
+  digest = "1:ee24580b8cfe1d429631051c3d04bab3302f5877dc234f7db511cc4fdb04070f"
   name = "github.com/tsocial/ts2fa"
   packages = ["otp"]
+  pruneopts = "UT"
   revision = "b7832c19b1308f5878442dda9961b0f456183564"
 
 [[projects]]
   branch = "master"
+  digest = "1:bf829a21d391f2c716a8b4e2f6a18b9c7aba027b16c2c26399bb56f8f31af5d5"
   name = "golang.org/x/crypto"
   packages = [
     "cryptobyte",
     "cryptobyte/asn1",
     "ocsp",
     "pkcs12",
-    "pkcs12/internal/rc2"
+    "pkcs12/internal/rc2",
   ]
+  pruneopts = "UT"
   revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
+  digest = "1:c06d9e11d955af78ac3bbb26bd02e01d2f61f689e1a3bce2ef6fb683ef8a7f2d"
   name = "gopkg.in/alecthomas/kingpin.v2"
   packages = ["."]
+  pruneopts = "UT"
   revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
   version = "v2.2.6"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "337bc29cce67ac7d7a752e875a8cb91679618fa5d3165245582b14d130e391c3"
+  input-imports = [
+    "github.com/satori/go.uuid",
+    "github.com/stretchr/testify/assert",
+    "github.com/tsocial/catoolkit/tlsproxy",
+    "github.com/tsocial/ts2fa/otp",
+    "gopkg.in/alecthomas/kingpin.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

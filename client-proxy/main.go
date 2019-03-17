@@ -93,6 +93,7 @@ var rules = []Transformation{
 }
 
 var interceptors = []Interceptor{
+	{path: "/status", in: ruleInterceptor(status)},
 	{path: "/v1/acl/token/", in: ruleInterceptor(acl)},
 }
 

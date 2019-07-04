@@ -35,9 +35,11 @@ var (
 	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
 	datacenter  = kingpin.Flag("dc", "nomad datacenter name").Envar("DC").Required().String()
 
-	rootFile = kingpin.Flag("root-ca-file", "RootCA File").Envar("ROOT_CA_FILE").File()
-	certFile = kingpin.Flag("cert-file", "Cert File").Envar("CERT_FILE").File()
-	keyFile  = kingpin.Flag("key-file", "Key File").Envar("KEY_FILE").File()
+	rootFile              = kingpin.Flag("root-ca-file", "RootCA File").Envar("ROOT_CA_FILE").File()
+	certFile              = kingpin.Flag("cert-file", "Cert File").Envar("CERT_FILE").File()
+	keyFile               = kingpin.Flag("key-file", "Key File").Envar("KEY_FILE").File()
+	skipVerifyServerCerts = kingpin.Flag("skip-verify-server-certs", "").Envar("SKIP_VERIFY_SERVER_CERTS").
+				Bool()
 
 	ts2faObj *ts2fa.Ts2FA
 )
@@ -230,7 +232,7 @@ func main() {
 	// Create a new SingleHost Proxy
 	reverseProxy := httputil.NewSingleHostReverseProxy(origin)
 
-	t, tErr := makeTransport(*certFile, *keyFile, *rootFile)
+	t, tErr := makeTransport(*certFile, *keyFile, *rootFile, *skipVerifyServerCerts)
 	if tErr != nil {
 		log.Fatal(tErr)
 	}
@@ -243,7 +245,7 @@ func main() {
 	}
 }
 
-func makeTransport(certFile, keyFile, rootFile *os.File) (http.RoundTripper, error) {
+func makeTransport(certFile, keyFile, rootFile *os.File, skipVerify bool) (http.RoundTripper, error) {
 	if certFile == nil || keyFile == nil || rootFile == nil {
 		log.Println("Falling back to default Transport")
 		return http.DefaultTransport, nil
@@ -263,8 +265,9 @@ func makeTransport(certFile, keyFile, rootFile *os.File) (http.RoundTripper, err
 	caCertPool.AppendCertsFromPEM(caCert)
 
 	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-		RootCAs:      caCertPool,
+		Certificates:       []tls.Certificate{cert},
+		RootCAs:            caCertPool,
+		InsecureSkipVerify: skipVerify,
 	}
 
 	tlsConfig.BuildNameToCertificate()

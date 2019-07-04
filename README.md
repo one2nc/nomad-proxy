@@ -1,5 +1,6 @@
 # nomad-proxy
 
+
 Sample Nomad job:
 ```hcl
 job "nomad_proxy_%(dc)s" {

@@ -19,6 +19,6 @@ deploy:
       branch: master
 
   - provider: script
-    script: make registry_upload_image
+    script: make private_registry_upload_image
     on:
       branch: master

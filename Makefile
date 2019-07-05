@@ -44,10 +44,10 @@ upload_image: docker_login
 	docker push $(SERVER_REPO):latest
 	docker push $(SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
-docker_registry_login:
+private_registry_login:
 	echo "$(DOCKER_REGISTRY_PASSWORD)" | docker login -u "$(DOCKER_REGISTRY_USERNAME)" ${DOMAIN} --password-stdin
 
-registry_upload_image: docker_registry_login
+private_registry_upload_image: private_registry_login
 	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):latest
 	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 	docker push $(REGISTRY_CLIENT_REPO):latest

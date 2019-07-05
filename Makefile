@@ -1,5 +1,5 @@
-CLIENT_REPO := "tsl8/nomad-client-proxy"
-SERVER_REPO := "tsl8/nomad-server-proxy"
+CLIENT_REPO := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
+SERVER_REPO := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
 SHELL := /bin/bash
 
 .PHONY: nomad-proxy

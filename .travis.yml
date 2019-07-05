@@ -16,9 +16,9 @@ deploy:
   - provider: script
     script: make upload_image
     on:
-      branch: master
+      branch: makefile_fix
 
   - provider: script
-    script: make private_registry_upload_image
+    script: make upload_private_image
     on:
-      branch: master
+      branch: makefile_fix

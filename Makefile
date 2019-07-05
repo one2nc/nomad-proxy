@@ -44,19 +44,19 @@ upload_image: docker_login
 	docker push $(SERVER_REPO):latest
 	docker push $(SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
-private_registry_login:
-	echo "$(DOCKER_REGISTRY_PASSWORD)" | docker login -u "$(DOCKER_REGISTRY_USERNAME)" ${DOMAIN} --password-stdin
+private_docker_login:
+	echo "$(PRIVATE_DOCKER_PASSWORD)" | docker login -u "$(PRIVATE_DOCKER_USERNAME)" ${DOMAIN} --password-stdin
 
-private_registry_upload_image: private_registry_login
-	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):latest
-	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
-	docker push $(REGISTRY_CLIENT_REPO):latest
-	docker push $(REGISTRY_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+upload_private_image: private_docker_login
+	docker tag $(CLIENT_REPO):latest $(PRIVATE_CLIENT_REPO):latest
+	docker tag $(CLIENT_REPO):latest $(PRIVATE_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+	docker push $(PRIVATE_CLIENT_REPO):latest
+	docker push $(PRIVATE_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
-	docker tag $(SERVER_REPO):latest $(REGISTRY_SERVER_REPO):latest
-	docker tag $(SERVER_REPO):latest $(REGISTRY_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
-	docker push $(REGISTRY_SERVER_REPO):latest
-	docker push $(REGISTRY_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+	docker tag $(SERVER_REPO):latest $(PRIVATE_SERVER_REPO):latest
+	docker tag $(SERVER_REPO):latest $(PRIVATE_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+	docker push $(PRIVATE_SERVER_REPO):latest
+	docker push $(PRIVATE_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
 copy_certs:
 	cp -r client-proxy/testdata/* /tmp/

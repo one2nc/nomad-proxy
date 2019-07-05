@@ -1,5 +1,6 @@
 CLIENT_REPO := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
 SERVER_REPO := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
+DOMAIN := docker-registry.trustingsocial.com
 SHELL := /bin/bash
 
 .PHONY: nomad-proxy
@@ -43,7 +44,7 @@ upload_image: docker_login
 	docker push $(SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
 docker_login:
-	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
+	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" ${DOMAIN} --password-stdin
 
 copy_certs:
 	cp -r client-proxy/testdata/* /tmp/

@@ -31,6 +31,7 @@ build_mac: build_deps
 build_images: build_linux
 	docker-compose -f docker-compose.yaml build client-proxy server-proxy
 
+
 upload_image: docker_login
 	docker tag $(CLIENT_REPO):latest $(CLIENT_REPO):$(TRAVIS_BRANCH)-latest
 	docker tag $(CLIENT_REPO):latest $(CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)

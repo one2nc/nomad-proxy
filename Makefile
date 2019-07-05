@@ -1,8 +1,8 @@
 CLIENT_REPO := "tsl8/nomad-client-proxy"
 SERVER_REPO := "tsl8/nomad-server-proxy"
 
-REGISTRY_CLIENT_REPO: := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
-REGISTRY_SERVER_REPO: := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
+REGISTRY_CLIENT_REPO := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
+REGISTRY_SERVER_REPO := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
 
 DOMAIN := docker-registry.trustingsocial.com
 SHELL := /bin/bash

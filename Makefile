@@ -1,5 +1,9 @@
-CLIENT_REPO := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
-SERVER_REPO := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
+CLIENT_REPO := "tsl8/nomad-client-proxy"
+SERVER_REPO := "tsl8/nomad-server-proxy"
+
+REGISTRY_CLIENT_REPO: := "docker-registry.trustingsocial.com/sre/nomad-client-proxy"
+REGISTRY_SERVER_REPO: := "docker-registry.trustingsocial.com/sre/nomad-server-proxy"
+
 DOMAIN := docker-registry.trustingsocial.com
 SHELL := /bin/bash
 
@@ -31,21 +35,33 @@ build_mac: build_deps
 build_images: build_linux
 	docker-compose -f docker-compose.yaml build client-proxy server-proxy
 
+docker_login:
+	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
 
 upload_image: docker_login
 	docker tag $(CLIENT_REPO):latest $(CLIENT_REPO):$(TRAVIS_BRANCH)-latest
 	docker tag $(CLIENT_REPO):latest $(CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 	docker push $(CLIENT_REPO):latest
-	docker push $(CLIENT_REPO):$(TRAVIS_BRANCH)-latest
 	docker push $(CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+
 	docker tag $(SERVER_REPO):latest $(SERVER_REPO):$(TRAVIS_BRANCH)-latest
 	docker tag $(SERVER_REPO):latest $(SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 	docker push $(SERVER_REPO):latest
-	docker push $(SERVER_REPO):$(TRAVIS_BRANCH)-latest
 	docker push $(SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
-docker_login:
-	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" ${DOMAIN} --password-stdin
+docker_registry_login:
+	echo "$(DOCKER_REGISTRY_PASSWORD)" | docker login -u "$(DOCKER_REGISTRY_USERNAME)" ${DOMAIN} --password-stdin
+
+registry_upload_image: docker_registry_login
+	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):latest
+	docker tag $(CLIENT_REPO):latest $(REGISTRY_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+	docker push $(REGISTRY_CLIENT_REPO):latest
+	docker push $(REGISTRY_CLIENT_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+
+	docker tag $(SERVER_REPO):latest $(REGISTRY_SERVER_REPO):latest
+	docker tag $(SERVER_REPO):latest $(REGISTRY_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
+	docker push $(REGISTRY_SERVER_REPO):latest
+	docker push $(REGISTRY_SERVER_REPO):$(TRAVIS_BRANCH)-$(TRAVIS_BUILD_NUMBER)
 
 copy_certs:
 	cp -r client-proxy/testdata/* /tmp/

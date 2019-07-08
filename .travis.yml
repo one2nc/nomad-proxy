@@ -1,13 +1,10 @@
 language: go
 
 go:
-  - "1.11"
+  - "1.12.6"
 
 services:
   - docker
-
-install:
-  - echo "Hello World"
 
 script:
   - make build_linux
@@ -18,5 +15,10 @@ script:
 deploy:
   - provider: script
     script: make upload_image
+    on:
+      branch: master
+
+  - provider: script
+    script: make upload_private_image
     on:
       branch: master

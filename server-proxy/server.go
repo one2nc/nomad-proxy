@@ -31,7 +31,7 @@ func cliParams() *TlsParams {
 		CertFile:   *CertFile,
 		KeyFile:    *KeyFile,
 		CACertFile: *RootCert,
-		HardFail:   true,
+		HardFail:   false,
 		SkipTls:    *SkipTLS,
 		ServerName: *TlsServerName,
 	}

@@ -69,7 +69,7 @@ func ServerTlsConfig(cert, key, root string) (*tls.Config, error) {
 
 	// Create a tlsConfig
 	tlsConfig := &tls.Config{
-		ServerName:            "tessellate-server",
+		ServerName:            "nomad-server-proxy",
 		ClientAuth:            tls.RequireAndVerifyClientCert,
 		Certificates:          []tls.Certificate{certificate},
 		VerifyPeerCertificate: certValidator,

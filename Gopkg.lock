@@ -33,39 +33,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:66b0766ab5da003a215354cc60487e39d0ff0158e264c6fab29fa3e7ef263ca8"
-  name = "github.com/cloudflare/cfssl"
-  packages = [
-    "crypto/pkcs7",
-    "errors",
-    "helpers",
-    "helpers/derhelpers",
-    "log",
-  ]
-  pruneopts = "UT"
-  revision = "5d63dbd981b5c408effbb58c442d54761ff94fbd"
-  version = "1.3.2"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = "UT"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
-
-[[projects]]
-  digest = "1:fabe4bb8fadac9fd769267f14316ed84a86cd49e722c5e65f4881ae0082bf76f"
-  name = "github.com/google/certificate-transparency-go"
-  packages = [
-    ".",
-    "asn1",
-    "tls",
-    "x509",
-    "x509/pkix",
-  ]
-  pruneopts = "UT"
-  revision = "5ab67e519c93568ac3ee50fd6772a5bcf8aa460d"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -105,41 +78,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4d869924ab08a2f12243fa94f6bd57f9fc0b8d78ae307d1b8400482f012aeacb"
-  name = "github.com/tsocial/catoolkit"
-  packages = ["tlsproxy"]
-  pruneopts = "UT"
-  revision = "56411e75a0aef412571e8aec3677c304dc2a230d"
-
-[[projects]]
-  digest = "1:4069aaefc8b975f84debd1604a4ea0b5aec39eace937f22df553328efbc09057"
-  name = "github.com/tsocial/cfssl"
-  packages = ["revoke"]
-  pruneopts = "UT"
-  revision = "bd4e730d5cf68d132d5b9e4a747318a4e6c10d64"
-  version = "1.3.3"
-
-[[projects]]
-  branch = "master"
   digest = "1:ee24580b8cfe1d429631051c3d04bab3302f5877dc234f7db511cc4fdb04070f"
   name = "github.com/tsocial/ts2fa"
   packages = ["otp"]
   pruneopts = "UT"
   revision = "b7832c19b1308f5878442dda9961b0f456183564"
-
-[[projects]]
-  branch = "master"
-  digest = "1:bf829a21d391f2c716a8b4e2f6a18b9c7aba027b16c2c26399bb56f8f31af5d5"
-  name = "golang.org/x/crypto"
-  packages = [
-    "cryptobyte",
-    "cryptobyte/asn1",
-    "ocsp",
-    "pkcs12",
-    "pkcs12/internal/rc2",
-  ]
-  pruneopts = "UT"
-  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
   digest = "1:c06d9e11d955af78ac3bbb26bd02e01d2f61f689e1a3bce2ef6fb683ef8a7f2d"
@@ -155,7 +98,6 @@
   input-imports = [
     "github.com/satori/go.uuid",
     "github.com/stretchr/testify/assert",
-    "github.com/tsocial/catoolkit/tlsproxy",
     "github.com/tsocial/ts2fa/otp",
     "gopkg.in/alecthomas/kingpin.v2",
   ]

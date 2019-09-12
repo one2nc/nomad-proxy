@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/tsocial/catoolkit/tlsproxy"
-	"net"
 	"io"
 	"log"
+	"net"
 )
 
 func handler(conn net.Conn) {
@@ -22,17 +21,15 @@ func handler(conn net.Conn) {
 		return
 	}
 
-	conn = tlsproxy.WrapTls(conn)
+	conn = WrapTls(conn)
 
 	if conn == nil {
 		return
 	}
 
-	tlsproxy.DefaultHandle(conn)
+	DefaultHandle(conn)
 }
 
-
-
 func main() {
-	tlsproxy.RunServer(handler)
+	RunServer(handler)
 }

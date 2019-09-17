@@ -17,19 +17,19 @@ import (
 	"crypto/x509"
 	"os"
 
-	"github.com/satori/go.uuid"
 	"github.com/tsocial/ts2fa/otp"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 // Version of this Proxy.
-const Version = "0.1.0"
+const (
+	Version = "0.1.0"
+	Empty   = ""
+)
 
 var (
-	prefix    = uuid.NewV4().String()
-	port      = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
-	jobPrefix = kingpin.Flag("job", "Job Prefix").Short('j').
-			Default(prefix).Envar("JOB_PREFIX").String()
+	port       = kingpin.Flag("port", "Port no.").Short('p').Default("9988").String()
+	jobPrefix  = kingpin.Flag("job", "Job Prefix").Short('j').Envar("JOB_PREFIX").String()
 	serverAddr = kingpin.Flag("server-addr", "Server Addr").
 			Short('s').Default("http://127.0.0.1:8080").Envar("SERVER_ADDR").String()
 	ts2faConfig = kingpin.Flag("totp-config", "Filepath to 2FA config").File()
@@ -40,6 +40,8 @@ var (
 	keyFile               = kingpin.Flag("key-file", "Key File").Envar("KEY_FILE").File()
 	skipVerifyServerCerts = kingpin.Flag("skip-verify-server-certs", "").Envar("SKIP_VERIFY_SERVER_CERTS").
 				Bool()
+	skipPrefix = kingpin.Flag("skip-prefix", "If jobs should not be prefixed, skip prefixing by passing this flag.").
+			Envar("SKIP_PREFIX").Bool()
 
 	ts2faObj *ts2fa.Ts2FA
 )
@@ -158,12 +160,12 @@ func (c *customTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 func initTs2fa(r io.ReadCloser) error {
-	if *ts2faConfig == nil {
+	if r == nil {
 		log.Println("2FA is not enabled")
 		return nil
 	}
 
-	confBytes, err := ioutil.ReadAll(*ts2faConfig)
+	confBytes, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err
 	}
@@ -216,6 +218,16 @@ func main() {
 	// Setup and Parse Kingpin.
 	kingpin.Version(Version)
 	kingpin.Parse()
+
+	// validate prefix flag
+	// if prefix is required but not provided, fail.
+	if !*skipPrefix && *jobPrefix == Empty {
+		log.Fatal("Prefix is required, pass --skip-prefix flag to skip prefixing.")
+	}
+	// if prefix is not required explicitly set it as empty.
+	if *skipPrefix {
+		*jobPrefix = Empty
+	}
 
 	// Parse the Backend URL, ensure it works, panic if it doesnt.
 	origin, err := url.Parse(*serverAddr)

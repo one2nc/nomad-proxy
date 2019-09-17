@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http/httptest"
-	"os"
 	"regexp"
 	"strings"
 	"testing"
+
+	"os"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -109,7 +110,7 @@ func TestJobs(t *testing.T) {
 				if err := json.Unmarshal(body, &b); err != nil {
 					t.Fatal(err)
 				}
-				if *jobPrefix != EMPTY {
+				if !*skipPrefix {
 					b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
 				}
 
@@ -130,7 +131,7 @@ func TestJobs(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				if *jobPrefix != EMPTY {
+				if !*skipPrefix {
 					aORb := regexp.MustCompile(*jobPrefix)
 					matches := aORb.FindAllStringIndex(nb.Job["ID"].(string), -1)
 
@@ -189,9 +190,13 @@ func TestJobs(t *testing.T) {
 }
 
 func TestMain(t *testing.M) {
+	// Run test with job prefix.
 	*jobPrefix = "testjob"
 	*datacenter = "dc1"
 	t.Run()
-	*jobPrefix = EMPTY
+	// Run the same tests without a prefix.
+
+	*skipPrefix = true
+	*jobPrefix = Empty
 	os.Exit(t.Run())
 }

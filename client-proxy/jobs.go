@@ -43,7 +43,7 @@ func jobs(r *http.Request) error {
 		val := r.URL.Query()
 		existingPrefix := val.Get(Prefix)
 		prefix := *jobPrefix
-		if *jobPrefix != EMPTY && strings.HasPrefix(existingPrefix, *jobPrefix) {
+		if !*skipPrefix && strings.HasPrefix(existingPrefix, *jobPrefix) {
 			prefix = existingPrefix
 		}
 
@@ -62,7 +62,7 @@ func jobs(r *http.Request) error {
 	}
 
 	jID := b.Job["ID"].(string)
-	if !strings.HasPrefix(jID, *jobPrefix) && *jobPrefix != EMPTY {
+	if !*skipPrefix && !strings.HasPrefix(jID, *jobPrefix) {
 		b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
 	}
 

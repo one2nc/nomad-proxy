@@ -69,7 +69,7 @@ validate_nomad_server_tls: run_nomad
 	curl -k https://localhost:4646; [[ $$? -eq "35" ]] && /bin/true
 
 run_client_proxy: build_client_proxy
-	./client-proxy/nomad-client-proxy --root-ca-file=/tmp/cert-chain.pem --cert-file=/tmp/client.pem --key-file=/tmp/client-key.pem --server-addr=https://localhost:4646 --dc=dc1 2>&1 &
+	./client-proxy/nomad-client-proxy --root-ca-file=/tmp/cert-chain.pem --cert-file=/tmp/client.pem --key-file=/tmp/client-key.pem --server-addr=https://localhost:4646 --dc=dc1 --skip-prefix 2>&1 &
 
 validate_client_proxy: validate_nomad_server_tls run_client_proxy
 	sleep 5

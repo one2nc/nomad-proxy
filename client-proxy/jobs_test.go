@@ -14,11 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	testPrefix = "testjob"
-	testDC     = "dc1"
-)
-
 func TestJobs(t *testing.T) {
 	t.Run("DELETE", func(t *testing.T) {
 		req := httptest.NewRequest("DELETE", "/", nil)
@@ -40,7 +35,7 @@ func TestJobs(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if req.URL.Query().Get("prefix") != "testjob" {
+			if req.URL.Query().Get("prefix") != *jobPrefix {
 				t.Fatal("Should have attached prefix to the query params")
 			}
 		})
@@ -51,7 +46,7 @@ func TestJobs(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if req.URL.Query().Get("prefix") != "testjob" {
+			if req.URL.Query().Get("prefix") != *jobPrefix {
 				t.Fatal("Should have attached prefix to the query params")
 			}
 
@@ -66,7 +61,7 @@ func TestJobs(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if req.URL.Query().Get("prefix") != testPrefix {
+			if req.URL.Query().Get("prefix") != *jobPrefix {
 				t.Fatal("Should override prefix to the query params")
 			}
 		})
@@ -95,11 +90,11 @@ func TestJobs(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				if !strings.HasPrefix(b.Job["ID"].(string), testPrefix) {
+				if !strings.HasPrefix(b.Job["ID"].(string), *jobPrefix) {
 					t.Fatal("Should have altered Job Prefix")
 				}
 
-				if !strings.HasPrefix(b.Job["Name"].(string), testPrefix) {
+				if !strings.HasPrefix(b.Job["Name"].(string), *jobPrefix) {
 					t.Fatal("Should have altered Job Name Prefix")
 				}
 			})
@@ -114,7 +109,9 @@ func TestJobs(t *testing.T) {
 				if err := json.Unmarshal(body, &b); err != nil {
 					t.Fatal(err)
 				}
-				b.Job["ID"] = fmt.Sprintf("%v_%v", testPrefix, b.Job["ID"])
+				if *jobPrefix != EMPTY {
+					b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
+				}
 
 				newBody, err := json.Marshal(b)
 
@@ -133,16 +130,18 @@ func TestJobs(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				aORb := regexp.MustCompile(testPrefix)
-				matches := aORb.FindAllStringIndex(nb.Job["ID"].(string), -1)
+				if *jobPrefix != EMPTY {
+					aORb := regexp.MustCompile(*jobPrefix)
+					matches := aORb.FindAllStringIndex(nb.Job["ID"].(string), -1)
 
-				if !strings.HasPrefix(nb.Job["ID"].(string), testPrefix) {
+					if len(matches) != 1 {
+						t.Fatal("Should have only one prefix")
+					}
+				}
+				if !strings.HasPrefix(nb.Job["ID"].(string), *jobPrefix) {
 					t.Fatal("Should have Job Prefix")
 				}
 
-				if len(matches) != 1 {
-					t.Fatal("Should have only one prefix")
-				}
 			})
 
 			t.Run("Should not touch malformed Job payload", func(t *testing.T) {
@@ -172,7 +171,7 @@ func TestJobs(t *testing.T) {
 				if err := json.Unmarshal(body, &b); err != nil {
 					t.Fatal(err)
 				}
-				b.Job["ID"] = fmt.Sprintf("%v_%v", testPrefix, b.Job["ID"])
+				b.Job["ID"] = fmt.Sprintf("%v_%v", *jobPrefix, b.Job["ID"])
 				b.Job[Datacenters] = []string{"invalid"}
 
 				newBody, err := json.Marshal(b)
@@ -190,7 +189,9 @@ func TestJobs(t *testing.T) {
 }
 
 func TestMain(t *testing.M) {
-	*jobPrefix = testPrefix
-	*datacenter = testDC
+	*jobPrefix = "testjob"
+	*datacenter = "dc1"
+	t.Run()
+	*jobPrefix = EMPTY
 	os.Exit(t.Run())
 }

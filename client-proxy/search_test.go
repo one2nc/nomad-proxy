@@ -46,7 +46,7 @@ func TestSearch(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if !strings.HasPrefix(b.Prefix, testPrefix) {
+			if !strings.HasPrefix(b.Prefix, *jobPrefix) {
 				t.Fatal("Should have altered Job Prefix")
 			}
 
@@ -76,7 +76,7 @@ func TestSearch(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if !strings.HasPrefix(b.Prefix, testPrefix) {
+			if !strings.HasPrefix(b.Prefix, *jobPrefix) {
 				t.Fatal("Should have altered Job Prefix")
 			}
 

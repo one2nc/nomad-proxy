@@ -79,7 +79,7 @@ func TestModifyRequest(t *testing.T) {
 		t.Run("/v1/job", func(t *testing.T) {
 			req := httptest.NewRequest("GET", "/v1/job/hello", nil)
 
-			if err := modifyRequest(req); err == nil {
+			if err := modifyRequest(req); err == nil && *jobPrefix != EMPTY {
 				t.Fatal("Non prefix Get should raise an error")
 			}
 		})
